@@ -5,6 +5,7 @@
 #include "balas_hammer.h"
 #include "potentiel.h"
 #include "marche_pied.h"
+#include "base.h"
 
 int main(int argc, char **argv)
 {
@@ -35,7 +36,7 @@ int main(int argc, char **argv)
         balas_hammer(p, s);
     }
     else {
-        printf("Méthode inconnue.\n");
+        printf("Méthode inconnue (utiliser 'no' ou 'bh').\n");
         liberer_probleme(p);
         liberer_solution(s);
         return 1;
@@ -43,6 +44,12 @@ int main(int argc, char **argv)
 
     afficher_solution(p, s);
 
+    // === Construction et affichage de la base ===
+    Base *b = construire_base(s);
+    afficher_base_liste(b);  // debug textuel
+    afficher_base_graphe(b, p->nb_fournisseurs, p->nb_clients);  // dessin style S/T
+
+    liberer_base(b);
     liberer_probleme(p);
     liberer_solution(s);
 
