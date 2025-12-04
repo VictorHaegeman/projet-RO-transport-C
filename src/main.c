@@ -48,6 +48,13 @@ int main(int argc, char **argv)
     Base *b = construire_base(s);
     afficher_base_liste(b);  // debug textuel
     afficher_base_graphe(b, p->nb_fournisseurs, p->nb_clients);  // dessin style S/T
+    
+    if (base_est_arbre(b, p->nb_fournisseurs, p->nb_clients)) {
+        printf("\n>>> La base est un arbre. OK pour les potentiels.\n");
+    } else {
+        printf("\n>>> La base n'est PAS un arbre ! Correction nécessaire.\n");
+    }
+    
 
     liberer_base(b);
     liberer_probleme(p);

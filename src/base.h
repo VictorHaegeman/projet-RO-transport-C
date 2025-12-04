@@ -18,6 +18,8 @@ void afficher_base_liste(const Base *b);
 // Affichage "graphe" : fournisseurs en haut, clients en bas, arcs dessinés en ASCII
 void afficher_base_graphe(const Base *b, int nb_fournisseurs, int nb_clients);
 
+int base_est_arbre(const Base *b, int n, int m);
+
 // Libère la mémoire de la base
 void liberer_base(Base *b);
 

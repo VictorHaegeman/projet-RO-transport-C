@@ -175,6 +175,59 @@ void afficher_base_graphe(const Base *b, int nb_fournisseurs, int nb_clients)
     printf("\n=============================================\n");
 }
 
+// ================================================================
+// ===============   TEST SI LA BASE EST UN ARBRE   ===============
+// ================================================================
+
+// Graphe biparti : fournisseurs = 0..(n-1), clients = n..(n+m-1)
+//
+// On crée un tableau d’adjacence F-C, C-F et on fait une DFS.
+
+static void dfs(int noeud, int visited[], int n, int m, const Base *b)
+{
+    visited[noeud] = 1;
+
+    // Explorer tous les arcs de la base
+    for (int k = 0; k < b->nb_arcs; k++) {
+        int fi = b->arcs[k][0];  // fournisseur
+        int cj = b->arcs[k][1];  // client
+
+        int u = fi;
+        int v = n + cj; // client mappé à un numéro différent
+
+        if (noeud == u && !visited[v])
+            dfs(v, visited, n, m, b);
+        if (noeud == v && !visited[u])
+            dfs(u, visited, n, m, b);
+    }
+}
+
+int base_est_arbre(const Base *b, int n, int m)
+{
+    // ---------- Test 1 : nombre d'arcs ----------
+    if (b->nb_arcs != n + m - 1) {
+        return 0; // faux : pas le bon nombre d'arcs
+    }
+
+    // ---------- Test 2 : connexité ----------
+    int total = n + m;
+    int visited[total];
+    for (int i = 0; i < total; i++)
+        visited[i] = 0;
+
+    // Lancer un DFS depuis le noeud 0 (F0)
+    dfs(0, visited, n, m, b);
+
+    // Vérifier que tous les noeuds ont été visités
+    for (int i = 0; i < total; i++) {
+        if (!visited[i])
+            return 0; // base non connexe → pas un arbre
+    }
+
+    // Si on arrive ici : nombre d'arcs correct + connexité = ARBRE
+    return 1;
+}
+
 // ---------- Libération ----------
 
 void liberer_base(Base *b)
