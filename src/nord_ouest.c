@@ -34,5 +34,5 @@ void coin_nord_ouest(const Probleme *p, Solution *s)
         }
     }
 
-    printf("--- Fin Coin Nord-Ouest ---\n\n");
+    printf("--- Fin Nord-Ouest ---\n\n");
 }

@@ -61,9 +61,9 @@ void balas_hammer(const Probleme *p, Solution *s)
         // Pénalités lignes
         for (int i = 0; i < p->nb_fournisseurs; i++) {
             if (!ligne_active[i]) continue;
-            int pen = penalite_ligne(p, i);
-            if (pen > meilleure_penalite) {
-                meilleure_penalite = pen;
+            int pen_ligne = penalite_ligne(p, i);
+            if (pen_ligne > meilleure_penalite) {
+                meilleure_penalite = pen_ligne;
                 type = 0;
                 indice = i;
             }
@@ -72,9 +72,9 @@ void balas_hammer(const Probleme *p, Solution *s)
         // Pénalités colonnes
         for (int j = 0; j < p->nb_clients; j++) {
             if (!colonne_active[j]) continue;
-            int pen = penalite_colonne(p, j);
-            if (pen > meilleure_penalite) {
-                meilleure_penalite = pen;
+            int pen_colonne = penalite_colonne(p, j);
+            if (pen_colonne > meilleure_penalite) {
+                meilleure_penalite = pen_colonne;
                 type = 1;
                 indice = j;
             }

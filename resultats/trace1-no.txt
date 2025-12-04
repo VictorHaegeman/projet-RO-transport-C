@@ -1,0 +1,32 @@
+victorhaegeman@MacBook-Pro-de-Victor projet-RO-transport-C % ./transport data/ex1.txt bh
+=== PROBLÈME DE TRANSPORT ===
+Fournisseurs : 3 | Clients : 3
+
+  12    7    5 | 40
+   9    8    6 | 20
+   3    6    9 | 30
+---------------
+  35   30   25 
+
+
+=== MÉTHODE : BALAS-HAMMER ===
+
+--- Déroulé de la méthode de Balas-Hammer ---
+
+Pénalité maximale : 6 → colonne 0
+Remplissage de la case (2,0) avec 30 unités (coût 3)
+Pénalité maximale : 6 → colonne 0
+Remplissage de la case (1,0) avec 5 unités (coût 9)
+Pénalité maximale : 2 → ligne 0
+Remplissage de la case (0,2) avec 25 unités (coût 5)
+Pénalité maximale : 2 → ligne 0
+Remplissage de la case (0,1) avec 15 unités (coût 7)
+Pénalité maximale : 2 → ligne 1
+Remplissage de la case (1,1) avec 15 unités (coût 8)
+
+--- Fin de la méthode de Balas-Hammer ---
+
+=== TABLEAU DE TRANSPORT ===
+   0   15   25 
+   5   15    0 
+  30    0    0 
