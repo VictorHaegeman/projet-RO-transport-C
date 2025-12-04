@@ -27,7 +27,7 @@ int main(int argc, char **argv)
     Solution *s = creer_solution_vide(p);
 
     if (strcmp(methode, "no") == 0) {
-        printf("\n=== MÉTHODE : COIN NORD-OUEST ===\n");
+        printf("\n=== MÉTHODE : NORD-OUEST ===\n");
         coin_nord_ouest(p, s);
     }
     else if (strcmp(methode, "bh") == 0) {
