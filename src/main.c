@@ -54,6 +54,31 @@ int main(int argc, char **argv)
     } else {
         printf("\n>>> La base n'est PAS un arbre ! Correction nécessaire.\n");
     }
+    if (!base_est_arbre(b, p->nb_fournisseurs, p->nb_clients)) {
+
+        printf("\n>>> Correction automatique de la base...\n");
+    
+       /* Base *b2 = corriger_base(b, s,
+                                 p->nb_fournisseurs,
+                                 p->nb_clients);
+    
+        liberer_base(b);
+        b = b2;*/
+    
+        printf("\n--- Nouvelle base après correction ---\n");
+        afficher_base_liste(b);
+        afficher_base_graphe(b,
+                             p->nb_fournisseurs,
+                             p->nb_clients);
+    }
+    
+    // Exemple : on teste un marche-pied avec l’arc entrant (0,1) = (F0, C1)
+printf("\n=== TEST MARCHE-PIED SUR (F0, C1) ===\n");
+marche_pied(b, s, 0, 1);
+
+printf("\n=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===\n");
+afficher_solution(p, s);
+
     
 
     liberer_base(b);

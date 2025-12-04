@@ -83,7 +83,7 @@ void afficher_base_liste(const Base *b)
     printf("=============================\n");
 }
 
-// ---------- Affichage "graphe" façon schéma du prof ----------
+// ---------- Affichage "graphe" comme dans le cours ----------
 //
 // Rangée du haut : F0   F1   F2  ...
 // Rangée du bas : T0   T1   T2  ...
@@ -92,7 +92,7 @@ void afficher_base_liste(const Base *b)
 
 void afficher_base_graphe(const Base *b, int nb_fournisseurs, int nb_clients)
 {
-    printf("\n=== GRAPHE BIPARTI (STYLE SCHÉMA DU PROF) ===\n\n");
+    printf("\n=== GRAPHE DESSINE ===\n\n");
 
     if (!b || b->nb_arcs == 0) {
         printf("(base vide)\n");

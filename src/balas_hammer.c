@@ -108,6 +108,11 @@ void balas_hammer(const Probleme *p, Solution *s)
                 }
             }
         }
+        if (meilleur_i == -1 || meilleur_j == -1) {
+            printf("Erreur BH : aucune cellule valide trouvée (base complète ? données incohérentes ?)\n");
+            break;   // ou return ;
+        }
+        
 
         int q = minimum(provisions[meilleur_i], commandes[meilleur_j]);
         s->x[meilleur_i][meilleur_j] = q;
