@@ -72,12 +72,31 @@ int main(int argc, char **argv)
                              p->nb_clients);
     }
     
-    // Exemple : on teste un marche-pied avec l’arc entrant (0,1) = (F0, C1)
-printf("\n=== TEST MARCHE-PIED SUR (F0, C1) ===\n");
-marche_pied(b, s, 0, 1);
+    // integration du proc potentiel ici 
+    // === Potentiels + coûts marginaux + marche-pied ===
+    int pot_f[p->nb_fournisseurs];
+    int pot_c[p->nb_clients];
 
-printf("\n=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===\n");
-afficher_solution(p, s);
+    calculer_potentiels(p, b, pot_f, pot_c);
+    afficher_potentiels(p, pot_f, pot_c);
+    afficher_table_couts_potentiels(p, pot_f, pot_c);
+
+    int i_entree, j_entree;
+    int optimal = calculer_et_afficher_couts_marginaux(p, s,
+                                                       pot_f, pot_c,
+                                                       &i_entree, &j_entree);
+
+    if (!optimal) {
+        printf("\n=== MARCHE-PIED SUR L'ARÊTE AMÉLIORANTE (F%d, C%d) ===\n",
+               i_entree, j_entree);
+        marche_pied(b, s, i_entree, j_entree);
+
+        printf("\n=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===\n");
+        afficher_solution(p, s);
+    } else {
+        printf("\n=== SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===\n");
+    }
+
 
     
 
