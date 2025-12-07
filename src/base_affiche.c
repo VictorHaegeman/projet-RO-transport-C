@@ -236,3 +236,11 @@ void liberer_base(Base *b)
     if (b->arcs) free(b->arcs);
     free(b);
 }
+
+int base_contient_cycle(const Base *b, int n, int m){
+    return b->nb_arcs == n + m - 1;
+}
+
+void base_retirer_cycle(Base *b, int n, int m){
+    
+}

@@ -48,6 +48,8 @@ int main(int argc, char **argv)
     Base *b = construire_base(s);
     afficher_base_liste(b);  // debug textuel
     afficher_base_graphe(b, p->nb_fournisseurs, p->nb_clients);  // dessin style S/T
+
+
     
     if (base_est_arbre(b, p->nb_fournisseurs, p->nb_clients)) {
         printf("\n>>> La base est un arbre. OK pour les potentiels.\n");
@@ -71,7 +73,11 @@ int main(int argc, char **argv)
                              p->nb_fournisseurs,
                              p->nb_clients);
     }
-    
+    if (base_contient_cycle(b, p->nb_fournisseurs, p->nb_clients)) {
+        printf("\n>>> Problème : La base contient un cycle !\n");
+        base_retirer_cycle(b, p->nb_fournisseurs, p->nb_clients);
+    }
+
     // Exemple : on teste un marche-pied avec l’arc entrant (0,1) = (F0, C1)
 printf("\n=== TEST MARCHE-PIED SUR (F0, C1) ===\n");
 marche_pied(b, s, 0, 1);
