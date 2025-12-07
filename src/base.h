@@ -19,7 +19,7 @@ void afficher_base_liste(const Base *b);
 void afficher_base_graphe(const Base *b, int nb_fournisseurs, int nb_clients);
 
 int base_est_arbre(const Base *b, int n, int m);
-Base*corriger_base(const Base *b, const Solution *s, int nb_fournisseur, int nb_clients);
+Base *corriger_base(const Base *b, Solution *s, int nb_fournisseur, int nb_clients);
 
 // Libère la mémoire de la base
 void liberer_base(Base *b);

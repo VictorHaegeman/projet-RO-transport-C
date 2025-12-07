@@ -58,12 +58,12 @@ int main(int argc, char **argv)
 
         printf("\n>>> Correction automatique de la base...\n");
     
-       /* Base *b2 = corriger_base(b, s,
+        Base *b2 = corriger_base(b, s,
                                  p->nb_fournisseurs,
                                  p->nb_clients);
     
         liberer_base(b);
-        b = b2;*/
+        b = b2;
     
         printf("\n--- Nouvelle base après correction ---\n");
         afficher_base_liste(b);
