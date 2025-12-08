@@ -93,7 +93,7 @@ int main(int argc, char **argv)
     int iteration = 1;
     double time_spent_mp=0.0;
 
-
+// c'est pas bon ici je pense 
     do {
         printf("\n================== ITERATION %d ==================\n", iteration++);
 
