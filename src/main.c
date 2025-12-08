@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 #include "problem.h"
 #include "nord_ouest.h"
 #include "balas_hammer.h"
@@ -27,13 +28,20 @@ int main(int argc, char **argv)
 
     Solution *s = creer_solution_vide(p);
 
+    clock_t start;
+    clock_t end;
+
     if (strcmp(methode, "no") == 0) {
         printf("\n=== MÉTHODE : NORD-OUEST ===\n");
+        start = clock();
         coin_nord_ouest(p, s);
+        end = clock();
     }
     else if (strcmp(methode, "bh") == 0) {
         printf("\n=== MÉTHODE : BALAS-HAMMER ===\n");
+        start = clock();
         balas_hammer(p, s);
+        end = clock();
     }
     else {
         printf("Méthode inconnue (utiliser 'no' ou 'bh').\n");
@@ -41,6 +49,8 @@ int main(int argc, char **argv)
         liberer_solution(s);
         return 1;
     }
+
+    double time_spent_methode = (double)(end - start) / CLOCKS_PER_SEC;
 
     printf("\n=== SOLUTION DE DÉPART ===\n");
     afficher_solution(p, s);
@@ -81,6 +91,8 @@ int main(int argc, char **argv)
     int i_entree, j_entree;
     int optimal = 0;
     int iteration = 1;
+    double time_spent_mp=0.0;
+
 
     do {
         printf("\n================== ITERATION %d ==================\n", iteration++);
@@ -95,19 +107,32 @@ int main(int argc, char **argv)
                                                        pot_f, pot_c,
                                                        &i_entree, &j_entree);
 
+        
+
         // 3) Marche-pied si ce n'est pas optimal
         if (!optimal) {
             printf("\n=== MARCHE-PIED SUR L'ARÊTE AMÉLIORANTE (F%d, C%d) ===\n",
                    i_entree, j_entree);
+            start = clock();
             marche_pied(b, s, i_entree, j_entree);
+            end = clock();
 
             printf("\n=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===\n");
             afficher_solution(p, s);
+            
+            time_spent_mp += (double)(end - start) / CLOCKS_PER_SEC;
         } else {
             printf("\n=== SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===\n");
         }
 
+        
+
     } while (!optimal);
+
+    printf("\n=== Meusure du temps ===\n");
+    printf("Temps méthode initiale (%s) : %.6f secondes\n", methode, time_spent_methode);
+    printf("Temps total marche-pied : %.6f secondes\n", time_spent_mp);
+    printf("=============================================\n");
 
     liberer_base(b);
     liberer_probleme(p);
