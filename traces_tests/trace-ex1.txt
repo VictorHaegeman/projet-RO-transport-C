@@ -1,0 +1,123 @@
+victorhaegeman@MacBook-Pro-de-Victor projet-RO-transport-C % ./transport tests/ex1.txt bh
+=== PROBLÈME DE TRANSPORT ===
+Fournisseurs : 2 | Clients : 2
+
+  30   20 | 100
+  10   50 | 100
+----------
+ 100  100 
+
+
+=== MÉTHODE : BALAS-HAMMER ===
+
+--- Déroulé de la méthode de Balas-Hammer ---
+
+Pénalité maximale : 40 → ligne 1
+Remplissage de la case (1,0) avec 100 unités (coût 10)
+Pénalité maximale : 30 → colonne 1
+Remplissage de la case (0,1) avec 100 unités (coût 20)
+
+--- Fin de la méthode de Balas-Hammer ---
+
+=== TABLEAU DE TRANSPORT ===
+   0  100 
+ 100    0 
+
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C1
+Arc 1 : F1 -> C0
+Nombre d'arcs = 2
+=============================
+
+=== GRAPHE DESSINE ===
+
+                                                                                                                        
+                                                                                                                        
+    S1        S2                                                                                                        
+     \         /                                                                                                        
+     \         /                                                                                                        
+      \       /                                                                                                         
+       \     /                                                                                                          
+        \   /                                                                                                           
+        \   /                                                                                                           
+         \ /                                                                                                            
+          *                                                                                                             
+         / \                                                                                                            
+         / \                                                                                                            
+        /   \                                                                                                           
+       /     \                                                                                                          
+      /       \                                                                                                         
+     /         \                                                                                                        
+    Ta        Tb                                                                                                        
+                                                                                                                        
+                                                                                                                        
+
+=============================================
+
+>>> La base n'est PAS un arbre ! Correction nécessaire.
+
+>>> Correction automatique de la base...
+Base non connexe (nb_arcs=2 < 3). Ajout d'arcs nuls pour connecter.
+Base corrigée avec 3 arcs (ajouts nuls) pour obtenir un arbre.
+
+--- Nouvelle base après correction ---
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C1
+Arc 1 : F1 -> C0
+Arc 2 : F0 -> C0
+Nombre d'arcs = 3
+=============================
+
+=== GRAPHE DESSINE ===
+
+                                                                                                                        
+                                                                                                                        
+    S1        S2                                                                                                        
+     *         /                                                                                                        
+     *         /                                                                                                        
+     |\       /                                                                                                         
+     | \     /                                                                                                          
+     |  \   /                                                                                                           
+     |  \   /                                                                                                           
+     |   \ /                                                                                                            
+     |    *                                                                                                             
+     |   / \                                                                                                            
+     |   / \                                                                                                            
+     |  /   \                                                                                                           
+     | /     \                                                                                                          
+     |/       \                                                                                                         
+     *         \                                                                                                        
+    Ta        Tb                                                                                                        
+                                                                                                                        
+                                                                                                                        
+
+=============================================
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = 0
+  E(F1) = -20
+Clients :
+  E(C0) = -30
+  E(C1) = -20
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1   
+F0        30     20
+F1        10      0
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1   
+F0         0      0
+F1         0     50
+
+Aucune arête améliorante détectée : tous les coûts marginaux des cases hors base sont >= 0.
+La proposition de transport est optimale pour ce problème.
+
+
+=== SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===
