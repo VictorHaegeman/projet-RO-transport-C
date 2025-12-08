@@ -55,49 +55,49 @@ int main(int argc, char **argv)
     printf("\n=== SOLUTION DE DÉPART ===\n");
     afficher_solution(p, s);
 
-    // === Construction et affichage de la base ===
+    // === Construction initiale de la base ===
     Base *b = construire_base(s);
-    afficher_base_liste(b);  // debug textuel
-    afficher_base_graphe(b, p->nb_fournisseurs, p->nb_clients);  // dessin style S/T
-    
-    if (base_est_arbre(b, p->nb_fournisseurs, p->nb_clients)) {
-        printf("\n>>> La base est un arbre. OK pour les potentiels.\n");
-    } else {
-        printf("\n>>> La base n'est PAS un arbre ! Correction nécessaire.\n");
-    }
 
-    if (!base_est_arbre(b, p->nb_fournisseurs, p->nb_clients)) {
-
-        printf("\n>>> Correction automatique de la base...\n");
-    
-        Base *b2 = corriger_base(b, s,
-                                 p->nb_fournisseurs,
-                                 p->nb_clients);
-    
-        liberer_base(b);
-        b = b2;
-    
-        printf("\n--- Nouvelle base après correction ---\n");
-        afficher_base_liste(b);
-        afficher_base_graphe(b,
-                             p->nb_fournisseurs,
-                             p->nb_clients);
-    }
-    
-    //  Potentiels + coûts marginaux + marche-pied (boucle complète) 
+    //  Potentiels + coûts marginaux + marche-pied (boucle complète)
     int pot_f[p->nb_fournisseurs];
     int pot_c[p->nb_clients];
 
     int i_entree, j_entree;
+    int i_sortie, j_sortie;
     int optimal = 0;
     int iteration = 1;
     double time_spent_mp=0.0;
 
-// c'est pas bon ici je pense 
-    do {
+    // c'est pas bon ici je pense 
+    while (1) {
         printf("\n================== ITERATION %d ==================\n", iteration++);
 
-        // 1) Potentiels 
+        // (Re)affichage de la base courante
+        afficher_base_liste(b);  // debug textuel
+        afficher_base_graphe(b, p->nb_fournisseurs, p->nb_clients);  // dessin style S/T
+
+        // Vérification/correction de la base à chaque itération pour que les potentiels soient cohérents
+        if (base_est_arbre(b, p->nb_fournisseurs, p->nb_clients)) {
+            printf("\n>>> La base est un arbre. OK pour les potentiels.\n");
+        } else {
+            printf("\n>>> La base n'est PAS un arbre ! Correction nécessaire.\n");
+            printf("\n>>> Correction automatique de la base...\n");
+
+            Base *b2 = corriger_base(b, s,
+                                     p->nb_fournisseurs,
+                                     p->nb_clients);
+
+            liberer_base(b);
+            b = b2;
+
+            printf("\n--- Nouvelle base après correction ---\n");
+            afficher_base_liste(b);
+            afficher_base_graphe(b,
+                                 p->nb_fournisseurs,
+                                 p->nb_clients);
+        }
+
+        // 1) Potentiels
         calculer_potentiels(p, b, pot_f, pot_c);
         afficher_potentiels(p, pot_f, pot_c);
         afficher_table_couts_potentiels(p, pot_f, pot_c);
@@ -114,20 +114,45 @@ int main(int argc, char **argv)
             printf("\n=== MARCHE-PIED SUR L'ARÊTE AMÉLIORANTE (F%d, C%d) ===\n",
                    i_entree, j_entree);
             start = clock();
-            marche_pied(b, s, i_entree, j_entree);
+            i_sortie = -1;
+            j_sortie = -1;
+            int theta_mp = marche_pied(b, s, i_entree, j_entree, &i_sortie, &j_sortie);
             end = clock();
 
             printf("\n=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===\n");
             afficher_solution(p, s);
-            
+
             time_spent_mp += (double)(end - start) / CLOCKS_PER_SEC;
+
+            if (theta_mp == 0) {
+                printf("Pivot dégénéré (theta = 0) : mise à jour de la base pour changer de proposition.\n");
+            }
+
+            // Mettre à jour la base en remplaçant l'arc sortant par l'arc entrant,
+            // même en cas de pivot dégénéré (theta = 0) pour éviter de boucler.
+            int remplace = 0;
+            if (i_sortie >= 0 && j_sortie >= 0) {
+                for (int k = 0; k < b->nb_arcs; k++) {
+                    if (b->arcs[k][0] == i_sortie && b->arcs[k][1] == j_sortie) {
+                        b->arcs[k][0] = i_entree;
+                        b->arcs[k][1] = j_entree;
+                        remplace = 1;
+                        break;
+                    }
+                }
+            }
+
+            if (!remplace) {
+                printf("Avertissement : base non mise à jour (arc sortant introuvable). Reconstruction.\n");
+                liberer_base(b);
+                b = construire_base(s);
+            }
         } else {
             printf("\n=== SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===\n");
+            break;
         }
 
-        
-
-    } while (!optimal);
+    }
 
     printf("\n=== Meusure du temps ===\n");
     printf("Temps méthode initiale (%s) : %.6f secondes\n", methode, time_spent_methode);

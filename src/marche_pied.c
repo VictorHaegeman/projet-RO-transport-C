@@ -45,11 +45,12 @@ static int trouver_chemin(const Base *b, int n, int m,
     return (parent[cible] != -1);
 }
 
-void marche_pied(const Base *b, Solution *s, int i_entree, int j_entree)
+int marche_pied(const Base *b, Solution *s,
+                int i_entree, int j_entree,
+                int *i_sortie_ptr, int *j_sortie_ptr)
 {
     int n = s->nb_fournisseurs;
     int m = s->nb_clients;
-    int total = n + m;
 
     int noeud_f = i_entree;      // fournisseur
     int noeud_c = n + j_entree;  // client
@@ -60,7 +61,9 @@ void marche_pied(const Base *b, Solution *s, int i_entree, int j_entree)
     if (!trouver_chemin(b, n, m, noeud_f, noeud_c, parent)) {
         printf("Erreur marche_pied : impossible de trouver un chemin entre F%d et C%d dans la base.\n",
                i_entree, j_entree);
-        return;
+        if (i_sortie_ptr) *i_sortie_ptr = -1;
+        if (j_sortie_ptr) *j_sortie_ptr = -1;
+        return -1;
     }
 
     // 2) Reconstruire le chemin (suite de nœuds) de F -> C
@@ -110,7 +113,9 @@ void marche_pied(const Base *b, Solution *s, int i_entree, int j_entree)
         }
         else {
             printf("Erreur marche_pied : chemin non biparti.\n");
-            return;
+            if (i_sortie_ptr) *i_sortie_ptr = -1;
+            if (j_sortie_ptr) *j_sortie_ptr = -1;
+            return -1;
         }
 
         cycle_i[e + 1] = fi;
@@ -137,7 +142,9 @@ void marche_pied(const Base *b, Solution *s, int i_entree, int j_entree)
 
     if (theta == INT_MAX) {
         printf("Erreur marche_pied : aucun arc avec signe '-' dans le cycle.\n");
-        return;
+        if (i_sortie_ptr) *i_sortie_ptr = -1;
+        if (j_sortie_ptr) *j_sortie_ptr = -1;
+        return -1;
     }
 
     printf("\n--- Marche-pied pour l’arc entrant (%d,%d) ---\n", i_entree, j_entree);
@@ -169,9 +176,14 @@ void marche_pied(const Base *b, Solution *s, int i_entree, int j_entree)
         }
     }
 
+    if (i_sortie_ptr) *i_sortie_ptr = i_sortie;
+    if (j_sortie_ptr) *j_sortie_ptr = j_sortie;
+
     if (i_sortie != -1) {
         printf("Arc sortant de la base : (%d,%d)\n", i_sortie, j_sortie);
     } else {
         printf("Attention : aucun arc '-' n’est tombé à 0 (situation dégénérée).\n");
     }
+
+    return theta;
 }
