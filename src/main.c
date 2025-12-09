@@ -103,7 +103,7 @@ int main(int argc, char **argv)
         afficher_table_couts_potentiels(p, pot_f, pot_c);
 
         // 2) Coûts marginaux + choix de l'arête améliorante
-        optimal = calculer_et_afficher_couts_marginaux(p, s,
+        optimal = calculer_et_afficher_couts_marginaux(p, s, b,
                                                        pot_f, pot_c,
                                                        &i_entree, &j_entree);
 

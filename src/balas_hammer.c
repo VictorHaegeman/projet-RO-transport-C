@@ -50,17 +50,35 @@ void balas_hammer(const Probleme *p, Solution *s)
 
     printf("\n--- Déroulé de la méthode de Balas-Hammer ---\n\n");
 
-    int nb_restants = p->nb_fournisseurs + p->nb_clients;
-
-    while (nb_restants > 1)
+    while (1)
     {
+        /* Nombre de lignes/colonnes encore vraiment utilisables (quantités > 0) */
+        int nb_lignes_actives = 0;
+        int nb_colonnes_actives = 0;
+
+        for (int i = 0; i < p->nb_fournisseurs; i++) {
+            if (ligne_active[i] && provisions[i] > 0)
+                nb_lignes_actives++;
+            else if (provisions[i] == 0)
+                ligne_active[i] = 0; /* nettoyage au passage */
+        }
+        for (int j = 0; j < p->nb_clients; j++) {
+            if (colonne_active[j] && commandes[j] > 0)
+                nb_colonnes_actives++;
+            else if (commandes[j] == 0)
+                colonne_active[j] = 0;
+        }
+
+        if (nb_lignes_actives + nb_colonnes_actives <= 1)
+            break;
+
         int meilleure_penalite = -1;
         int type = 0;   // 0 = ligne, 1 = colonne
         int indice = -1;
 
         // Pénalités lignes
         for (int i = 0; i < p->nb_fournisseurs; i++) {
-            if (!ligne_active[i]) continue;
+            if (!ligne_active[i] || provisions[i] == 0) continue;
             int pen_ligne = penalite_ligne(p, i);
             if (pen_ligne > meilleure_penalite) {
                 meilleure_penalite = pen_ligne;
@@ -71,7 +89,7 @@ void balas_hammer(const Probleme *p, Solution *s)
 
         // Pénalités colonnes
         for (int j = 0; j < p->nb_clients; j++) {
-            if (!colonne_active[j]) continue;
+            if (!colonne_active[j] || commandes[j] == 0) continue;
             int pen_colonne = penalite_colonne(p, j);
             if (pen_colonne > meilleure_penalite) {
                 meilleure_penalite = pen_colonne;
@@ -91,7 +109,7 @@ void balas_hammer(const Probleme *p, Solution *s)
 
         if (type == 0) {
             for (int j = 0; j < p->nb_clients; j++) {
-                if (!colonne_active[j]) continue;
+                if (!colonne_active[j] || commandes[j] == 0) continue;
                 if (p->couts[indice][j] < meilleur_cout) {
                     meilleur_cout = p->couts[indice][j];
                     meilleur_i = indice;
@@ -100,7 +118,7 @@ void balas_hammer(const Probleme *p, Solution *s)
             }
         } else {
             for (int i = 0; i < p->nb_fournisseurs; i++) {
-                if (!ligne_active[i]) continue;
+                if (!ligne_active[i] || provisions[i] == 0) continue;
                 if (p->couts[i][indice] < meilleur_cout) {
                     meilleur_cout = p->couts[i][indice];
                     meilleur_i = i;
@@ -123,13 +141,27 @@ void balas_hammer(const Probleme *p, Solution *s)
         provisions[meilleur_i] -= q;
         commandes[meilleur_j]  -= q;
 
-        if (provisions[meilleur_i] == 0) {
-            ligne_active[meilleur_i] = 0;
-            nb_restants--;
-        }
-        if (commandes[meilleur_j] == 0) {
-            colonne_active[meilleur_j] = 0;
-            nb_restants--;
+        /* Éviter de rayer simultanément la ligne ET la colonne en cas d’égalité */
+        if (provisions[meilleur_i] == 0 && commandes[meilleur_j] == 0) {
+            int pen_ligne = penalite_ligne(p, meilleur_i);
+            int pen_col  = penalite_colonne(p, meilleur_j);
+
+            if (pen_ligne > pen_col) {
+                colonne_active[meilleur_j] = 0;
+            } else if (pen_col > pen_ligne) {
+                ligne_active[meilleur_i] = 0;
+            } else {
+                /* À égalité parfaite, on garde la dimension qui offre le plus d’options restantes */
+                if (nb_lignes_actives >= nb_colonnes_actives)
+                    colonne_active[meilleur_j] = 0;
+                else
+                    ligne_active[meilleur_i] = 0;
+            }
+        } else {
+            if (provisions[meilleur_i] == 0)
+                ligne_active[meilleur_i] = 0;
+            if (commandes[meilleur_j] == 0)
+                colonne_active[meilleur_j] = 0;
         }
     }
 

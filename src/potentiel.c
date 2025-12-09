@@ -200,8 +200,21 @@ void afficher_table_couts_potentiels(const Probleme *p,
  * Calcule et affiche la table des coûts marginaux)
  * et dis si éventuellement une arête améliorante possible.
  */
+static int arc_dans_base(const Base *b, int i, int j)
+{
+    if (!b)
+        return 0;
+
+    for (int k = 0; k < b->nb_arcs; k++) {
+        if (b->arcs[k][0] == i && b->arcs[k][1] == j)
+            return 1;
+    }
+    return 0;
+}
+
 int calculer_et_afficher_couts_marginaux(const Probleme *p,
                                          const Solution *s,
+                                         const Base *b,
                                          const int *pot_f,
                                          const int *pot_c,
                                          int *i_entree,
@@ -236,8 +249,8 @@ int calculer_et_afficher_couts_marginaux(const Probleme *p,
 
             printf("%7d", marginal);
 
-            /* On ne considère que les cases hors base (x_ij == 0) pour l'arête améliorante */
-            if (s->x[i][j] == 0 && marginal < meilleur_marginal) {
+            /* On ne considère que les cases hors base (pas présentes dans b) pour l'arête améliorante */
+            if (!arc_dans_base(b, i, j) && marginal < meilleur_marginal) {
                 meilleur_marginal = marginal;
                 meilleur_i = i;
                 meilleur_j = j;
