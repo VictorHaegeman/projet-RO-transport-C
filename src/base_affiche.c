@@ -3,10 +3,10 @@
 #include <limits.h>
 #include "base.h"
 
-#define LARGEUR_ASCII 120
+#define LARGEUR_ASCII 200
 #define HAUTEUR_ASCII 20
 #define MARGE_HORIZ   4
-#define ESPACE_COL    10   // espacement horizontal entre noeuds
+#define ESPACE_COL    8   // espacement horizontal entre noeuds
 
 // ---------- Fonction utilitaire pour écrire du texte dans une "grille" ASCII ----------
 static void dessiner_texte(char canvas[HAUTEUR_ASCII][LARGEUR_ASCII],
@@ -230,7 +230,7 @@ int base_est_arbre(const Base *b, int n, int m)
 }
 
 // ================================================================
-// ==========   CORRECTION : SUPPRIMER UN CYCLE (MARBRE) ===========
+// ==========   CORRECTION : SUPPRIMER UN CYCLE  ==================
 // ================================================================
 //
 // Idée : si la base contient un cycle (nb_arcs >= n+m), on cherche
@@ -370,71 +370,20 @@ Base *corriger_base(const Base *b, Solution *s, int n, int m)
             unite_parent(fi, n + cj, parent_conn);
         }
         int root0 = find_parent(0, parent_conn);
-
-        /* Identifier une colonne et une ligne appartenant déjà au composant de F0
-           pour pouvoir raccrocher les composantes isolées. */
-        int client_root = -1;
-        for (int cj = 0; cj < m; cj++) {
-            if (find_parent(n + cj, parent_conn) == root0) {
-                client_root = cj;
-                break;
-            }
-        }
-        int composant_vu[total];
-        for (int i = 0; i < total; i++)
-            composant_vu[i] = 0;
-        composant_vu[root0] = 1;
-
-        /* Raccrocher chaque composante déconnectée à la composante de F0 */
         for (int node = 0; node < total && nb->nb_arcs < n + m - 1; node++) {
-            int comp = find_parent(node, parent_conn);
-            if (comp == root0 || composant_vu[comp])
-                continue;
+            if (find_parent(node, parent_conn) != root0) {
+                int fi, cj;
+                if (node < n) { fi = node; cj = 0; }
+                else         { fi = 0;    cj = node - n; }
 
-            composant_vu[comp] = 1;
-
-            /* Choisir un client dans la composante cible si possible */
-            int client_cible = -1;
-            for (int cj = 0; cj < m; cj++) {
-                if (find_parent(n + cj, parent_conn) == comp) {
-                    client_cible = cj;
-                    break;
+                if (!arc_existe(nb, nb->nb_arcs, fi, cj)) {
+                    nb->arcs[nb->nb_arcs][0] = fi;
+                    nb->arcs[nb->nb_arcs][1] = cj;
+                    nb->nb_arcs++;
+                    unite_parent(fi, n + cj, parent_conn);
+                    root0 = find_parent(0, parent_conn);
                 }
             }
-
-            int fi, cj;
-            if (client_cible != -1) {
-                fi = 0;               /* fournisseur racine */
-                cj = client_cible;    /* client de la composante déconnectée */
-            } else {
-                /* Pas de client détecté : on utilise un fournisseur de la composante et un client de la racine */
-                int fournisseur_cible = -1;
-                for (int f = 0; f < n; f++) {
-                    if (find_parent(f, parent_conn) == comp) {
-                        fournisseur_cible = f;
-                        break;
-                    }
-                }
-                fi = (fournisseur_cible != -1) ? fournisseur_cible : 0;
-                cj = (client_root != -1) ? client_root : 0;
-            }
-
-            if (!arc_existe(nb, nb->nb_arcs, fi, cj)) {
-                nb->arcs[nb->nb_arcs][0] = fi;
-                nb->arcs[nb->nb_arcs][1] = cj;
-                nb->nb_arcs++;
-                unite_parent(fi, n + cj, parent_conn);
-                root0 = find_parent(0, parent_conn);
-            }
-        }
-
-        /* Mettre à jour les degrés après ajout des arcs de connexion */
-        for (int t = 0; t < total; t++) deg[t] = 0;
-        for (int k = 0; k < nb->nb_arcs; k++) {
-            int fi = nb->arcs[k][0];
-            int cj = nb->arcs[k][1];
-            deg[fi]++;
-            deg[n + cj]++;
         }
 
         // 1) Connecter chaque client isolé à un fournisseur (ici F0)
