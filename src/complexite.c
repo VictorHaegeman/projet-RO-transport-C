@@ -605,7 +605,7 @@ double mesurer_temps_balas_hammer(const Probleme *p, Solution **solution_out)
 
 void lancer_etude_complexite(void)
 {
-    int tailles[] = {10, 40, 100, 400, 1000, 4000, 10000};
+    int tailles[] = {10, 40, 100, 200, 400, 1000 };
     int nb_tailles = (int)(sizeof(tailles) / sizeof(tailles[0]));
     int repetitions = 100;
 
