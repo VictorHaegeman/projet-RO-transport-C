@@ -1,0 +1,323 @@
+=== PROBLÈME DE TRANSPORT ===
+Fournisseurs : 3 | Clients : 4
+
+  11   12   10   10 | 60
+  17   16   15   18 | 30
+  19   21   20   22 | 90
+--------------------
+  50   75   30   25 
+
+
+=== MÉTHODE : NORD-OUEST ===
+
+--- Déroulé de la méthode du Coin Nord-Ouest ---
+Case (0,0) ← 50
+Case (0,1) ← 10
+Case (1,1) ← 30
+Case (2,1) ← 35
+Case (2,2) ← 30
+Case (2,3) ← 25
+--- Fin Nord-Ouest ---
+
+
+=== SOLUTION DE DÉPART ===
+=== TABLEAU DE TRANSPORT ===
+  50   10    0    0 
+   0   30    0    0 
+   0   35   30   25 
+
+
+================== ITERATION 1 ==================
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C0
+Arc 1 : F0 -> C1
+Arc 2 : F1 -> C1
+Arc 3 : F2 -> C1
+Arc 4 : F2 -> C2
+Arc 5 : F2 -> C3
+Nombre d'arcs = 6
+=============================
+
+>>> La base est un arbre. OK pour les potentiels.
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = -9
+  E(F1) = -5
+  E(F2) = 0
+Clients :
+  E(C0) = -20
+  E(C1) = -21
+  E(C2) = -20
+  E(C3) = -22
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1      C2      C3   
+F0        11     12     11     13
+F1        15     16     15     17
+F2        20     21     20     22
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1      C2      C3   
+F0         0      0     -1     -3
+F1         2      0      0      1
+F2        -1      0      0      0
+
+Arête améliorante retenue : (F0, C3) avec coût marginal -3.
+
+
+=== MARCHE-PIED SUR L'ARÊTE AMÉLIORANTE (F0, C3) ===
+
+--- Marche-pied pour l’arc entrant (0,3) ---
+Cycle trouvé :
+  + (0,3)
+  - (0,1)
+  + (2,1)
+  - (2,3)
+Theta = 10
+Arc sortant de la base : (0,1)
+
+=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===
+=== TABLEAU DE TRANSPORT ===
+  50    0    0   10 
+   0   30    0    0 
+   0   45   30   15 
+
+
+================== ITERATION 2 ==================
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C0
+Arc 1 : F0 -> C3
+Arc 2 : F1 -> C1
+Arc 3 : F2 -> C1
+Arc 4 : F2 -> C2
+Arc 5 : F2 -> C3
+Nombre d'arcs = 6
+=============================
+
+>>> La base est un arbre. OK pour les potentiels.
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = -12
+  E(F1) = -5
+  E(F2) = 0
+Clients :
+  E(C0) = -23
+  E(C1) = -21
+  E(C2) = -20
+  E(C3) = -22
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1      C2      C3   
+F0        11      9      8     10
+F1        18     16     15     17
+F2        23     21     20     22
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1      C2      C3   
+F0         0      3      2      0
+F1        -1      0      0      1
+F2        -4      0      0      0
+
+Arête améliorante retenue : (F2, C0) avec coût marginal -4.
+
+
+=== MARCHE-PIED SUR L'ARÊTE AMÉLIORANTE (F2, C0) ===
+
+--- Marche-pied pour l’arc entrant (2,0) ---
+Cycle trouvé :
+  + (2,0)
+  - (2,3)
+  + (0,3)
+  - (0,0)
+Theta = 15
+Arc sortant de la base : (2,3)
+
+=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===
+=== TABLEAU DE TRANSPORT ===
+  35    0    0   25 
+   0   30    0    0 
+  15   45   30    0 
+
+
+================== ITERATION 3 ==================
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C0
+Arc 1 : F0 -> C3
+Arc 2 : F1 -> C1
+Arc 3 : F2 -> C1
+Arc 4 : F2 -> C2
+Arc 5 : F2 -> C0
+Nombre d'arcs = 6
+=============================
+
+>>> La base est un arbre. OK pour les potentiels.
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = -8
+  E(F1) = -5
+  E(F2) = 0
+Clients :
+  E(C0) = -19
+  E(C1) = -21
+  E(C2) = -20
+  E(C3) = -18
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1      C2      C3   
+F0        11     13     12     10
+F1        14     16     15     13
+F2        19     21     20     18
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1      C2      C3   
+F0         0     -1     -2      0
+F1         3      0      0      5
+F2         0      0      0      4
+
+Arête améliorante retenue : (F0, C2) avec coût marginal -2.
+
+
+=== MARCHE-PIED SUR L'ARÊTE AMÉLIORANTE (F0, C2) ===
+
+--- Marche-pied pour l’arc entrant (0,2) ---
+Cycle trouvé :
+  + (0,2)
+  - (0,0)
+  + (2,0)
+  - (2,2)
+Theta = 30
+Arc sortant de la base : (2,2)
+
+=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===
+=== TABLEAU DE TRANSPORT ===
+   5    0   30   25 
+   0   30    0    0 
+  45   45    0    0 
+
+
+================== ITERATION 4 ==================
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C0
+Arc 1 : F0 -> C3
+Arc 2 : F1 -> C1
+Arc 3 : F2 -> C1
+Arc 4 : F0 -> C2
+Arc 5 : F2 -> C0
+Nombre d'arcs = 6
+=============================
+
+>>> La base est un arbre. OK pour les potentiels.
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = 0
+  E(F1) = 3
+  E(F2) = 8
+Clients :
+  E(C0) = -11
+  E(C1) = -13
+  E(C2) = -10
+  E(C3) = -10
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1      C2      C3   
+F0        11     13     10     10
+F1        14     16     13     13
+F2        19     21     18     18
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1      C2      C3   
+F0         0     -1      0      0
+F1         3      0      2      5
+F2         0      0      2      4
+
+Arête améliorante retenue : (F0, C1) avec coût marginal -1.
+
+
+=== MARCHE-PIED SUR L'ARÊTE AMÉLIORANTE (F0, C1) ===
+
+--- Marche-pied pour l’arc entrant (0,1) ---
+Cycle trouvé :
+  + (0,1)
+  - (0,0)
+  + (2,0)
+  - (2,1)
+Theta = 5
+Arc sortant de la base : (0,0)
+
+=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===
+=== TABLEAU DE TRANSPORT ===
+   0    5   30   25 
+   0   30    0    0 
+  50   40    0    0 
+
+
+================== ITERATION 5 ==================
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C1
+Arc 1 : F0 -> C3
+Arc 2 : F1 -> C1
+Arc 3 : F2 -> C1
+Arc 4 : F0 -> C2
+Arc 5 : F2 -> C0
+Nombre d'arcs = 6
+=============================
+
+>>> La base est un arbre. OK pour les potentiels.
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = 0
+  E(F1) = 4
+  E(F2) = 9
+Clients :
+  E(C0) = -10
+  E(C1) = -12
+  E(C2) = -10
+  E(C3) = -10
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1      C2      C3   
+F0        10     12     10     10
+F1        14     16     14     14
+F2        19     21     19     19
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1      C2      C3   
+F0         1      0      0      0
+F1         3      0      1      4
+F2         0      0      1      3
+
+Aucune arête améliorante détectée : tous les coûts marginaux des cases hors base sont >= 0.
+La proposition de transport est optimale pour ce problème.
+
+
+=== SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===
+
+=== Meusure du temps ===
+Temps méthode initiale (no) : 0.001000 secondes
+Temps total marche-pied : 0.004000 secondes
+=============================================

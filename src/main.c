@@ -1,17 +1,21 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <stdlib.h>
+#include <stdarg.h>
 #include "problem.h"
 #include "nord_ouest.h"
 #include "balas_hammer.h"
 #include "potentiel.h"
 #include "marche_pied.h"
 #include "base.h"
+#include "trace.h"
 
 int main(int argc, char **argv)
 {
+
     if (argc < 3) {
-        printf("Usage : %s <fichier.txt> <no|bh>\n", argv[0]);
+        trace("Usage : %s <fichier.txt> <no|bh>\n", argv[0]);
         return 1;
     }
 
@@ -20,7 +24,20 @@ int main(int argc, char **argv)
 
     Probleme *p = lire_probleme(fichier);
     if (!p) {
-        printf("Erreur : impossible de lire le fichier.\n");
+        trace("Erreur : impossible de lire le fichier.\n");
+        return 1;
+    }
+
+    char *fichier_modifie = malloc(strlen(fichier) - 11); 
+    strncpy(fichier_modifie, fichier + 8, strlen(fichier) - 12); 
+    fichier_modifie[strlen(fichier) - 12] = '\0';
+
+    char trace_filename[256];
+    snprintf(trace_filename, sizeof(trace_filename), "traces_tests/NEW1-1-trace%s-%s.txt", fichier_modifie, methode);
+
+    trace_file = fopen(trace_filename, "w");
+    if (!trace_file) {
+        perror("Erreur trace");
         return 1;
     }
 
@@ -32,19 +49,19 @@ int main(int argc, char **argv)
     clock_t end;
 
     if (strcmp(methode, "no") == 0) {
-        printf("\n=== MÉTHODE : NORD-OUEST ===\n");
+        trace("\n=== MÉTHODE : NORD-OUEST ===\n");
         start = clock();
         coin_nord_ouest(p, s);
         end = clock();
     }
     else if (strcmp(methode, "bh") == 0) {
-        printf("\n=== MÉTHODE : BALAS-HAMMER ===\n");
+        trace("\n=== MÉTHODE : BALAS-HAMMER ===\n");
         start = clock();
         balas_hammer(p, s);
         end = clock();
     }
     else {
-        printf("Méthode inconnue (utiliser 'no' ou 'bh').\n");
+        trace("Méthode inconnue (utiliser 'no' ou 'bh').\n");
         liberer_probleme(p);
         liberer_solution(s);
         return 1;
@@ -52,7 +69,7 @@ int main(int argc, char **argv)
 
     double time_spent_methode = (double)(end - start) / CLOCKS_PER_SEC;
 
-    printf("\n=== SOLUTION DE DÉPART ===\n");
+    trace("\n=== SOLUTION DE DÉPART ===\n");
     afficher_solution(p, s);
 
     // === Construction initiale de la base ===
@@ -70,7 +87,7 @@ int main(int argc, char **argv)
 
     // c'est pas bon ici je pense 
     while (1) {
-        printf("\n================== ITERATION %d ==================\n", iteration++);
+        trace("\n================== ITERATION %d ==================\n", iteration++);
 
         // (Re)affichage de la base courante
         afficher_base_liste(b);  // debug textuel
@@ -78,10 +95,10 @@ int main(int argc, char **argv)
 
         // Vérification/correction de la base à chaque itération pour que les potentiels soient cohérents
         if (base_est_arbre(b, p->nb_fournisseurs, p->nb_clients)) {
-            printf("\n>>> La base est un arbre. OK pour les potentiels.\n");
+            trace("\n>>> La base est un arbre. OK pour les potentiels.\n");
         } else {
-            printf("\n>>> La base n'est PAS un arbre ! Correction nécessaire.\n");
-            printf("\n>>> Correction automatique de la base...\n");
+            trace("\n>>> La base n'est PAS un arbre ! Correction nécessaire.\n");
+            trace("\n>>> Correction automatique de la base...\n");
 
             Base *b2 = corriger_base(b, s,
                                      p->nb_fournisseurs,
@@ -90,7 +107,7 @@ int main(int argc, char **argv)
             liberer_base(b);
             b = b2;
 
-            printf("\n--- Nouvelle base après correction ---\n");
+            trace("\n--- Nouvelle base après correction ---\n");
             afficher_base_liste(b);
             afficher_base_graphe(b,
                                  p->nb_fournisseurs,
@@ -111,7 +128,7 @@ int main(int argc, char **argv)
 
         // 3) Marche-pied si ce n'est pas optimal
         if (!optimal) {
-            printf("\n=== MARCHE-PIED SUR L'ARÊTE AMÉLIORANTE (F%d, C%d) ===\n",
+            trace("\n=== MARCHE-PIED SUR L'ARÊTE AMÉLIORANTE (F%d, C%d) ===\n",
                    i_entree, j_entree);
             start = clock();
             i_sortie = -1;
@@ -119,13 +136,13 @@ int main(int argc, char **argv)
             int theta_mp = marche_pied(b, s, i_entree, j_entree, &i_sortie, &j_sortie);
             end = clock();
 
-            printf("\n=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===\n");
+            trace("\n=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===\n");
             afficher_solution(p, s);
 
             time_spent_mp += (double)(end - start) / CLOCKS_PER_SEC;
 
             if (theta_mp == 0) {
-                printf("Pivot dégénéré (theta = 0) : mise à jour de la base pour changer de proposition.\n");
+                trace("Pivot dégénéré (theta = 0) : mise à jour de la base pour changer de proposition.\n");
             }
 
             // Mettre à jour la base en remplaçant l'arc sortant par l'arc entrant,
@@ -143,25 +160,30 @@ int main(int argc, char **argv)
             }
 
             if (!remplace) {
-                printf("Avertissement : base non mise à jour (arc sortant introuvable). Reconstruction.\n");
+                trace("Avertissement : base non mise à jour (arc sortant introuvable). Reconstruction.\n");
                 liberer_base(b);
                 b = construire_base(s);
             }
         } else {
-            printf("\n=== SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===\n");
+            trace("\n=== SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===\n");
             break;
         }
 
     }
 
-    printf("\n=== Meusure du temps ===\n");
-    printf("Temps méthode initiale (%s) : %.6f secondes\n", methode, time_spent_methode);
-    printf("Temps total marche-pied : %.6f secondes\n", time_spent_mp);
-    printf("=============================================\n");
+    trace("\n=== Meusure du temps ===\n");
+    trace("Temps méthode initiale (%s) : %.6f secondes\n", methode, time_spent_methode);
+    trace("Temps total marche-pied : %.6f secondes\n", time_spent_mp);
+    trace("=============================================\n");
 
     liberer_base(b);
     liberer_probleme(p);
     liberer_solution(s);
+    fclose(trace_file);
 
     return 0;
 }
+
+
+
+

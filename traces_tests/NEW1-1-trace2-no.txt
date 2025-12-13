@@ -1,0 +1,78 @@
+=== PROBLÈME DE TRANSPORT ===
+Fournisseurs : 2 | Clients : 2
+
+  10   20 | 100
+  30   10 | 100
+----------
+ 100  100 
+
+
+=== MÉTHODE : NORD-OUEST ===
+
+--- Déroulé de la méthode du Coin Nord-Ouest ---
+Case (0,0) ← 100
+Case (1,0) ← 0
+Case (1,1) ← 100
+--- Fin Nord-Ouest ---
+
+
+=== SOLUTION DE DÉPART ===
+=== TABLEAU DE TRANSPORT ===
+ 100    0 
+   0  100 
+
+
+================== ITERATION 1 ==================
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C0
+Arc 1 : F1 -> C1
+Nombre d'arcs = 2
+=============================
+
+>>> La base n'est PAS un arbre ! Correction nécessaire.
+
+>>> Correction automatique de la base...
+Base non connexe (nb_arcs=2 < 3). Ajout d'arcs nuls pour connecter.
+Base corrigée avec 3 arcs (ajouts nuls) pour obtenir un arbre.
+
+--- Nouvelle base après correction ---
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C0
+Arc 1 : F1 -> C1
+Arc 2 : F1 -> C0
+Nombre d'arcs = 3
+=============================
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = -20
+  E(F1) = 0
+Clients :
+  E(C0) = -30
+  E(C1) = -10
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1   
+F0        10    -10
+F1        30     10
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1   
+F0         0     30
+F1         0      0
+
+Aucune arête améliorante détectée : tous les coûts marginaux des cases hors base sont >= 0.
+La proposition de transport est optimale pour ce problème.
+
+
+=== SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===
+
+=== Meusure du temps ===
+Temps méthode initiale (no) : 0.001000 secondes
+Temps total marche-pied : 0.000000 secondes
+=============================================

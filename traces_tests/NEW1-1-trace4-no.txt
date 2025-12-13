@@ -1,0 +1,118 @@
+=== PROBLÈME DE TRANSPORT ===
+Fournisseurs : 2 | Clients : 2
+
+  30    1 | 600
+   1   30 | 500
+----------
+ 100 1000 
+
+
+=== MÉTHODE : NORD-OUEST ===
+
+--- Déroulé de la méthode du Coin Nord-Ouest ---
+Case (0,0) ← 100
+Case (0,1) ← 500
+Case (1,1) ← 500
+--- Fin Nord-Ouest ---
+
+
+=== SOLUTION DE DÉPART ===
+=== TABLEAU DE TRANSPORT ===
+ 100  500 
+   0  500 
+
+
+================== ITERATION 1 ==================
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C0
+Arc 1 : F0 -> C1
+Arc 2 : F1 -> C1
+Nombre d'arcs = 3
+=============================
+
+>>> La base est un arbre. OK pour les potentiels.
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = 0
+  E(F1) = 29
+Clients :
+  E(C0) = -30
+  E(C1) = -1
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1   
+F0        30      1
+F1        59     30
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1   
+F0         0      0
+F1       -58      0
+
+Arête améliorante retenue : (F1, C0) avec coût marginal -58.
+
+
+=== MARCHE-PIED SUR L'ARÊTE AMÉLIORANTE (F1, C0) ===
+
+--- Marche-pied pour l’arc entrant (1,0) ---
+Cycle trouvé :
+  + (1,0)
+  - (1,1)
+  + (0,1)
+  - (0,0)
+Theta = 100
+Arc sortant de la base : (0,0)
+
+=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===
+=== TABLEAU DE TRANSPORT ===
+   0  600 
+ 100  400 
+
+
+================== ITERATION 2 ==================
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F1 -> C0
+Arc 1 : F0 -> C1
+Arc 2 : F1 -> C1
+Nombre d'arcs = 3
+=============================
+
+>>> La base est un arbre. OK pour les potentiels.
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = -29
+  E(F1) = 0
+Clients :
+  E(C0) = -1
+  E(C1) = -30
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1   
+F0       -28      1
+F1         1     30
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1   
+F0        58      0
+F1         0      0
+
+Aucune arête améliorante détectée : tous les coûts marginaux des cases hors base sont >= 0.
+La proposition de transport est optimale pour ce problème.
+
+
+=== SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===
+
+=== Meusure du temps ===
+Temps méthode initiale (no) : 0.000000 secondes
+Temps total marche-pied : 0.000000 secondes
+=============================================

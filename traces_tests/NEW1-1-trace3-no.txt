@@ -1,0 +1,118 @@
+=== PROBLÈME DE TRANSPORT ===
+Fournisseurs : 2 | Clients : 2
+
+  30   20 | 600
+  10   50 | 500
+----------
+ 100 1000 
+
+
+=== MÉTHODE : NORD-OUEST ===
+
+--- Déroulé de la méthode du Coin Nord-Ouest ---
+Case (0,0) ← 100
+Case (0,1) ← 500
+Case (1,1) ← 500
+--- Fin Nord-Ouest ---
+
+
+=== SOLUTION DE DÉPART ===
+=== TABLEAU DE TRANSPORT ===
+ 100  500 
+   0  500 
+
+
+================== ITERATION 1 ==================
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C0
+Arc 1 : F0 -> C1
+Arc 2 : F1 -> C1
+Nombre d'arcs = 3
+=============================
+
+>>> La base est un arbre. OK pour les potentiels.
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = 0
+  E(F1) = 30
+Clients :
+  E(C0) = -30
+  E(C1) = -20
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1   
+F0        30     20
+F1        60     50
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1   
+F0         0      0
+F1       -50      0
+
+Arête améliorante retenue : (F1, C0) avec coût marginal -50.
+
+
+=== MARCHE-PIED SUR L'ARÊTE AMÉLIORANTE (F1, C0) ===
+
+--- Marche-pied pour l’arc entrant (1,0) ---
+Cycle trouvé :
+  + (1,0)
+  - (1,1)
+  + (0,1)
+  - (0,0)
+Theta = 100
+Arc sortant de la base : (0,0)
+
+=== NOUVELLE SOLUTION APRÈS MARCHE-PIED ===
+=== TABLEAU DE TRANSPORT ===
+   0  600 
+ 100  400 
+
+
+================== ITERATION 2 ==================
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F1 -> C0
+Arc 1 : F0 -> C1
+Arc 2 : F1 -> C1
+Nombre d'arcs = 3
+=============================
+
+>>> La base est un arbre. OK pour les potentiels.
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = -30
+  E(F1) = 0
+Clients :
+  E(C0) = -10
+  E(C1) = -50
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1   
+F0       -20     20
+F1        10     50
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1   
+F0        50      0
+F1         0      0
+
+Aucune arête améliorante détectée : tous les coûts marginaux des cases hors base sont >= 0.
+La proposition de transport est optimale pour ce problème.
+
+
+=== SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===
+
+=== Meusure du temps ===
+Temps méthode initiale (no) : 0.001000 secondes
+Temps total marche-pied : 0.001000 secondes
+=============================================

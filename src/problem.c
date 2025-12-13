@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "problem.h"
+#include "trace.h"
 
 Probleme *lire_probleme(const char *nom_fichier)
 {
@@ -35,23 +36,23 @@ Probleme *lire_probleme(const char *nom_fichier)
 
 void afficher_probleme(const Probleme *p)
 {
-    printf("=== PROBLÈME DE TRANSPORT ===\n");
-    printf("Fournisseurs : %d | Clients : %d\n\n",
+    trace("=== PROBLÈME DE TRANSPORT ===\n");
+    trace("Fournisseurs : %d | Clients : %d\n\n",
            p->nb_fournisseurs, p->nb_clients);
 
     for (int i = 0; i < p->nb_fournisseurs; i++) {
         for (int j = 0; j < p->nb_clients; j++)
-            printf("%4d ", p->couts[i][j]);
-        printf("| %d\n", p->provisions[i]);
+            trace("%4d ", p->couts[i][j]);
+        trace("| %d\n", p->provisions[i]);
     }
 
     for (int j = 0; j < p->nb_clients; j++)
-        printf("-----");
-    printf("\n");
+        trace("-----");
+    trace("\n");
 
     for (int j = 0; j < p->nb_clients; j++)
-        printf("%4d ", p->commandes[j]);
-    printf("\n\n");
+        trace("%4d ", p->commandes[j]);
+    trace("\n\n");
 }
 
 Solution *creer_solution_vide(const Probleme *p)
@@ -72,13 +73,13 @@ Solution *creer_solution_vide(const Probleme *p)
 
 void afficher_solution(const Probleme *p, const Solution *s)
 {
-    printf("=== TABLEAU DE TRANSPORT ===\n");
+    trace("=== TABLEAU DE TRANSPORT ===\n");
     for (int i = 0; i < s->nb_fournisseurs; i++) {
         for (int j = 0; j < s->nb_clients; j++)
-            printf("%4d ", s->x[i][j]);
-        printf("\n");
+            trace("%4d ", s->x[i][j]);
+        trace("\n");
     }
-    printf("\n");
+    trace("\n");
 }
 
 void liberer_probleme(Probleme *p)

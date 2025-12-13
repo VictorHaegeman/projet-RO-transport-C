@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "nord_ouest.h"
+#include "trace.h"
 
 void coin_nord_ouest(const Probleme *p, Solution *s)
 {
@@ -14,14 +15,14 @@ void coin_nord_ouest(const Probleme *p, Solution *s)
 
     int i = 0, j = 0;
 
-    printf("\n--- Déroulé de la méthode du Coin Nord-Ouest ---\n");
+    trace("\n--- Déroulé de la méthode du Coin Nord-Ouest ---\n");
 
     while (i < p->nb_fournisseurs && j < p->nb_clients) {
 
         int q = (provisions[i] < commandes[j]) ? provisions[i] : commandes[j];
         s->x[i][j] = q;
 
-        printf("Case (%d,%d) ← %d\n", i, j, q);
+        trace("Case (%d,%d) ← %d\n", i, j, q);
 
         provisions[i] -= q;
         commandes[j] -= q;
@@ -34,5 +35,5 @@ void coin_nord_ouest(const Probleme *p, Solution *s)
         }
     }
 
-    printf("--- Fin Nord-Ouest ---\n\n");
+    trace("--- Fin Nord-Ouest ---\n\n");
 }

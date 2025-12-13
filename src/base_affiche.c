@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <limits.h>
 #include "base.h"
+#include "trace.h"
 
 #define LARGEUR_ASCII 200
 #define HAUTEUR_ASCII 20
@@ -68,20 +69,20 @@ Base *construire_base(const Solution *s)
 
 void afficher_base_liste(const Base *b)
 {
-    printf("\n=== BASE (LISTE DES ARCS) ===\n");
+    trace("\n=== BASE (LISTE DES ARCS) ===\n");
     if (!b || b->nb_arcs == 0) {
-        printf("(base vide)\n");
-        printf("=============================\n");
+        trace("(base vide)\n");
+        trace("=============================\n");
         return;
     }
 
     for (int k = 0; k < b->nb_arcs; k++) {
         int i = b->arcs[k][0];
         int j = b->arcs[k][1];
-        printf("Arc %d : F%d -> C%d\n", k, i, j);
+        trace("Arc %d : F%d -> C%d\n", k, i, j);
     }
-    printf("Nombre d'arcs = %d\n", b->nb_arcs);
-    printf("=============================\n");
+    trace("Nombre d'arcs = %d\n", b->nb_arcs);
+    trace("=============================\n");
 }
 
 // ---------- Affichage "graphe" comme dans le cours ----------
@@ -338,7 +339,7 @@ Base *corriger_base(const Base *b, Solution *s, int n, int m)
 
     // Cas 1 : base non connexe / trop peu d'arcs. On ajoute des arcs de valeur 0 pour obtenir n+m-1 arcs.
     if (b->nb_arcs < n + m - 1) {
-        printf("Base non connexe (nb_arcs=%d < %d). Ajout d'arcs nuls pour connecter.\n", b->nb_arcs, n + m - 1);
+        trace("Base non connexe (nb_arcs=%d < %d). Ajout d'arcs nuls pour connecter.\n", b->nb_arcs, n + m - 1);
 
         // Tableau pour savoir si un noeud est incident à au moins un arc
         int deg[total];
@@ -421,7 +422,7 @@ Base *corriger_base(const Base *b, Solution *s, int n, int m)
             }
         }
 
-        printf("Base corrigée avec %d arcs (ajouts nuls) pour obtenir un arbre.\n", nb->nb_arcs);
+        trace("Base corrigée avec %d arcs (ajouts nuls) pour obtenir un arbre.\n", nb->nb_arcs);
         // Les x correspondants restent à 0 dans s->x (degenerescence)
         return nb;
     }
@@ -430,7 +431,7 @@ Base *corriger_base(const Base *b, Solution *s, int n, int m)
     int cycle_len = 0;
 
     if (!trouver_cycle(b, n, m, cycle_noeuds, &cycle_len) || cycle_len < 4) {
-        printf("Aucun cycle détecté (ou cycle trop court) alors que nb_arcs=%d.\n", b->nb_arcs);
+        trace("Aucun cycle détecté (ou cycle trop court) alors que nb_arcs=%d.\n", b->nb_arcs);
         return construire_base(s);
     }
 
@@ -448,7 +449,7 @@ Base *corriger_base(const Base *b, Solution *s, int n, int m)
         if (u < n && v >= n) { fi = u; cj = v - n; }
         else if (v < n && u >= n) { fi = v; cj = u - n; }
         else {
-            printf("Cycle non biparti détecté, abandon de la correction.\n");
+            trace("Cycle non biparti détecté, abandon de la correction.\n");
             return construire_base(s);
         }
         cycle_i[e] = fi;
@@ -466,15 +467,15 @@ Base *corriger_base(const Base *b, Solution *s, int n, int m)
     }
 
     if (theta == INT_MAX) {
-        printf("Correction : aucun arc '-' ? Impossible de pousser un flux.\n");
+        trace("Correction : aucun arc '-' ? Impossible de pousser un flux.\n");
         return construire_base(s);
     }
 
-    printf("\n>>> Correction de cycle détecté (nb_arcs=%d). Cycle :\n", b->nb_arcs);
+    trace("\n>>> Correction de cycle détecté (nb_arcs=%d). Cycle :\n", b->nb_arcs);
     for (int e = 0; e < nb_arcs_cycle; e++) {
-        printf("  %c (%d,%d)\n", signe[e] > 0 ? '+' : '-', cycle_i[e], cycle_j[e]);
+        trace("  %c (%d,%d)\n", signe[e] > 0 ? '+' : '-', cycle_i[e], cycle_j[e]);
     }
-    printf("Theta choisi = %d\n", theta);
+    trace("Theta choisi = %d\n", theta);
 
     // Appliquer +theta / -theta le long du cycle
     for (int e = 0; e < nb_arcs_cycle; e++) {
@@ -496,9 +497,9 @@ Base *corriger_base(const Base *b, Solution *s, int n, int m)
     }
 
     if (i_sortie != -1) {
-        printf("Arc retiré de la base : (%d,%d)\n", i_sortie, j_sortie);
+        trace("Arc retiré de la base : (%d,%d)\n", i_sortie, j_sortie);
     } else {
-        printf("Attention : aucun arc '-' n'est tombé à 0 (dégénérescence possible).\n");
+        trace("Attention : aucun arc '-' n'est tombé à 0 (dégénérescence possible).\n");
     }
 
     // Re-construire la base à partir de la solution modifiée

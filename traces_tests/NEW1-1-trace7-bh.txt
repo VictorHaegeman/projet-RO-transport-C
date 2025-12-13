@@ -1,0 +1,87 @@
+=== PROBLÈME DE TRANSPORT ===
+Fournisseurs : 4 | Clients : 2
+
+  50   20 | 100
+  10   50 | 200
+  50   40 | 100
+  45   35 | 200
+----------
+ 300  300 
+
+
+=== MÉTHODE : BALAS-HAMMER ===
+
+--- Déroulé de la méthode de Balas-Hammer ---
+
+Pénalité maximale : 40 → ligne 1
+Remplissage de la case (1,0) avec 200 unités (coût 10)
+Pénalité maximale : 35 → colonne 0
+Remplissage de la case (3,0) avec 100 unités (coût 45)
+Pénalité maximale : 30 → ligne 0
+Remplissage de la case (0,1) avec 100 unités (coût 20)
+Pénalité maximale : 15 → colonne 1
+Remplissage de la case (3,1) avec 100 unités (coût 35)
+Pénalité maximale : 15 → colonne 1
+Remplissage de la case (2,1) avec 100 unités (coût 40)
+
+--- Fin de la méthode de Balas-Hammer ---
+
+
+=== SOLUTION DE DÉPART ===
+=== TABLEAU DE TRANSPORT ===
+   0  100 
+ 200    0 
+   0  100 
+ 100  100 
+
+
+================== ITERATION 1 ==================
+
+=== BASE (LISTE DES ARCS) ===
+Arc 0 : F0 -> C1
+Arc 1 : F1 -> C0
+Arc 2 : F2 -> C1
+Arc 3 : F3 -> C0
+Arc 4 : F3 -> C1
+Nombre d'arcs = 5
+=============================
+
+>>> La base est un arbre. OK pour les potentiels.
+
+=== POTENTIELS ===
+Fournisseurs :
+  E(F0) = 20
+  E(F1) = 0
+  E(F2) = 40
+  E(F3) = 35
+Clients :
+  E(C0) = -10
+  E(C1) = 0
+==================
+
+=== TABLE DES COUTS POTENTIELS ===
+
+         C0      C1   
+F0        30     20
+F1        10      0
+F2        50     40
+F3        45     35
+
+=== TABLE DES COUTS MARGINAUX ===
+
+         C0      C1   
+F0        20      0
+F1         0     50
+F2         0      0
+F3         0      0
+
+Aucune arête améliorante détectée : tous les coûts marginaux des cases hors base sont >= 0.
+La proposition de transport est optimale pour ce problème.
+
+
+=== SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===
+
+=== Meusure du temps ===
+Temps méthode initiale (bh) : 0.001000 secondes
+Temps total marche-pied : 0.000000 secondes
+=============================================

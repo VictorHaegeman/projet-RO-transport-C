@@ -1,7 +1,8 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -g
 
-COMMON_SRC = src/problem.c src/io.c src/utils.c \
+COMMON_SRC = src/trace.c \
+			 src/problem.c src/io.c src/utils.c \
              src/nord_ouest.c src/balas_hammer.c \
              src/potentiel.c src/marche_pied.c \
              src/base_affiche.c

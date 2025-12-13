@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include "marche_pied.h"
+#include "trace.h"
 
 // On représente les nœuds du graphe biparti par des indices :
 //  - Fournisseurs : 0 .. n-1
@@ -59,7 +60,7 @@ int marche_pied(const Base *b, Solution *s,
 
     // 1) Trouver le chemin dans la base entre F_i_entree et C_j_entree
     if (!trouver_chemin(b, n, m, noeud_f, noeud_c, parent)) {
-        printf("Erreur marche_pied : impossible de trouver un chemin entre F%d et C%d dans la base.\n",
+        trace("Erreur marche_pied : impossible de trouver un chemin entre F%d et C%d dans la base.\n",
                i_entree, j_entree);
         if (i_sortie_ptr) *i_sortie_ptr = -1;
         if (j_sortie_ptr) *j_sortie_ptr = -1;
@@ -112,7 +113,7 @@ int marche_pied(const Base *b, Solution *s,
             cj = u - n;
         }
         else {
-            printf("Erreur marche_pied : chemin non biparti.\n");
+            trace("Erreur marche_pied : chemin non biparti.\n");
             if (i_sortie_ptr) *i_sortie_ptr = -1;
             if (j_sortie_ptr) *j_sortie_ptr = -1;
             return -1;
@@ -141,19 +142,19 @@ int marche_pied(const Base *b, Solution *s,
     }
 
     if (theta == INT_MAX) {
-        printf("Erreur marche_pied : aucun arc avec signe '-' dans le cycle.\n");
+        trace("Erreur marche_pied : aucun arc avec signe '-' dans le cycle.\n");
         if (i_sortie_ptr) *i_sortie_ptr = -1;
         if (j_sortie_ptr) *j_sortie_ptr = -1;
         return -1;
     }
 
-    printf("\n--- Marche-pied pour l’arc entrant (%d,%d) ---\n", i_entree, j_entree);
-    printf("Cycle trouvé :\n");
+    trace("\n--- Marche-pied pour l’arc entrant (%d,%d) ---\n", i_entree, j_entree);
+    trace("Cycle trouvé :\n");
     for (int e = 0; e < cycle_taille; e++) {
-        printf("  %c (%d,%d)\n", (signe[e] > 0 ? '+' : '-'),
+        trace("  %c (%d,%d)\n", (signe[e] > 0 ? '+' : '-'),
                cycle_i[e], cycle_j[e]);
     }
-    printf("Theta = %d\n", theta);
+    trace("Theta = %d\n", theta);
 
     // 6) Mettre à jour la solution
     for (int e = 0; e < cycle_taille; e++) {
@@ -180,9 +181,9 @@ int marche_pied(const Base *b, Solution *s,
     if (j_sortie_ptr) *j_sortie_ptr = j_sortie;
 
     if (i_sortie != -1) {
-        printf("Arc sortant de la base : (%d,%d)\n", i_sortie, j_sortie);
+        trace("Arc sortant de la base : (%d,%d)\n", i_sortie, j_sortie);
     } else {
-        printf("Attention : aucun arc '-' n’est tombé à 0 (situation dégénérée).\n");
+        trace("Attention : aucun arc '-' n’est tombé à 0 (situation dégénérée).\n");
     }
 
     return theta;

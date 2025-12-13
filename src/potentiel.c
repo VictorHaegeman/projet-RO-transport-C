@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include "potentiel.h"
+#include "trace.h"
 
 /*
  * on prend un sommet de depart :
@@ -72,7 +73,7 @@ void calculer_potentiels(const Probleme *p, const Base *b,
     if (total > 64) {
         
         // secu si ca depasse 64
-        printf("Erreur : nombre total de sommets trop grand pour calculer les potentiels.\n");
+        trace("Erreur : nombre total de sommets trop grand pour calculer les potentiels.\n");
         return;
     }
 
@@ -145,19 +146,19 @@ void afficher_potentiels(const Probleme *p,
     int m = p->nb_clients;
     int i;
 
-    printf("\n=== POTENTIELS ===\n");
+    trace("\n=== POTENTIELS ===\n");
 
-    printf("Fournisseurs :\n");
+    trace("Fournisseurs :\n");
     for (i = 0; i < n; i++) {
-        printf("  E(F%d) = %d\n", i, pot_f[i]);
+        trace("  E(F%d) = %d\n", i, pot_f[i]);
     }
 
-    printf("Clients :\n");
+    trace("Clients :\n");
     for (i = 0; i < m; i++) {
-        printf("  E(C%d) = %d\n", i, pot_c[i]);
+        trace("  E(C%d) = %d\n", i, pot_c[i]);
     }
 
-    printf("==================\n\n");
+    trace("==================\n\n");
 }
 
 /*
@@ -174,26 +175,26 @@ void afficher_table_couts_potentiels(const Probleme *p,
 
     int i, j;
 
-    printf("=== TABLE DES COUTS POTENTIELS ===\n\n");
+    trace("=== TABLE DES COUTS POTENTIELS ===\n\n");
 
     /* (clients) */
-    printf("      ");
+    trace("      ");
     for (j = 0; j < m; j++) {
-        printf("   C%-4d", j);
+        trace("   C%-4d", j);
     }
-    printf("\n");
+    trace("\n");
 
     /* (fournisseurs) */
     for (i = 0; i < n; i++) {
-        printf("F%-3d ", i);
+        trace("F%-3d ", i);
         for (j = 0; j < m; j++) {
             int cp = pot_f[i] - pot_c[j];
-            printf("%7d", cp);
+            trace("%7d", cp);
         }
-        printf("\n");
+        trace("\n");
     }
 
-    printf("\n");
+    trace("\n");
 }
 
 /*
@@ -232,22 +233,22 @@ int calculer_et_afficher_couts_marginaux(const Probleme *p,
     int meilleur_j = -1;
     int meilleur_marginal = 0;   /* on cherche un coût marginal STRICTEMENT négatif */
 
-    printf("=== TABLE DES COUTS MARGINAUX ===\n\n");
+    trace("=== TABLE DES COUTS MARGINAUX ===\n\n");
 
     /* (clients) */
-    printf("      ");
+    trace("      ");
     for (j = 0; j < m; j++) {
-        printf("   C%-4d", j);
+        trace("   C%-4d", j);
     }
-    printf("\n");
+    trace("\n");
 
     for (i = 0; i < n; i++) {
-        printf("F%-3d ", i);
+        trace("F%-3d ", i);
         for (j = 0; j < m; j++) {
             int cp = pot_f[i] - pot_c[j];
             int marginal = p->couts[i][j] - cp;
 
-            printf("%7d", marginal);
+            trace("%7d", marginal);
 
             /* On ne considère que les cases hors base (pas présentes dans b) pour l'arête améliorante */
             if (!arc_dans_base(b, i, j) && marginal < meilleur_marginal) {
@@ -256,18 +257,18 @@ int calculer_et_afficher_couts_marginaux(const Probleme *p,
                 meilleur_j = j;
             }
         }
-        printf("\n");
+        trace("\n");
     }
 
-    printf("\n");
+    trace("\n");
 
     if (meilleur_i == -1) {
-        printf("Aucune arête améliorante détectée : tous les coûts marginaux des cases hors base sont >= 0.\n");
-        printf("La proposition de transport est optimale pour ce problème.\n\n");
+        trace("Aucune arête améliorante détectée : tous les coûts marginaux des cases hors base sont >= 0.\n");
+        trace("La proposition de transport est optimale pour ce problème.\n\n");
         return 1;  /* optimale */
     }
 
-    printf("Arête améliorante retenue : (F%d, C%d) avec coût marginal %d.\n\n",
+    trace("Arête améliorante retenue : (F%d, C%d) avec coût marginal %d.\n\n",
            meilleur_i, meilleur_j, meilleur_marginal);
 
     if (i_entree)

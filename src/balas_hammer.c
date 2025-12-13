@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <limits.h>
 #include "balas_hammer.h"
+#include "trace.h"
 
 static int minimum(int a, int b) { return (a < b) ? a : b; }
 
@@ -48,7 +49,7 @@ void balas_hammer(const Probleme *p, Solution *s)
     for (int j = 0; j < p->nb_clients; j++)
         colonne_active[j] = 1;
 
-    printf("\n--- Déroulé de la méthode de Balas-Hammer ---\n\n");
+    trace("\n--- Déroulé de la méthode de Balas-Hammer ---\n\n");
 
     while (1)
     {
@@ -98,7 +99,7 @@ void balas_hammer(const Probleme *p, Solution *s)
             }
         }
 
-        printf("Pénalité maximale : %d → %s %d\n",
+        trace("Pénalité maximale : %d → %s %d\n",
                meilleure_penalite,
                type == 0 ? "ligne" : "colonne",
                indice);
@@ -127,7 +128,7 @@ void balas_hammer(const Probleme *p, Solution *s)
             }
         }
         if (meilleur_i == -1 || meilleur_j == -1) {
-            printf("Erreur BH : aucune cellule valide trouvée (base complète ? données incohérentes ?)\n");
+            trace("Erreur BH : aucune cellule valide trouvée (base complète ? données incohérentes ?)\n");
             break;   // ou return ;
         }
         
@@ -135,7 +136,7 @@ void balas_hammer(const Probleme *p, Solution *s)
         int q = minimum(provisions[meilleur_i], commandes[meilleur_j]);
         s->x[meilleur_i][meilleur_j] = q;
 
-        printf("Remplissage de la case (%d,%d) avec %d unités (coût %d)\n",
+        trace("Remplissage de la case (%d,%d) avec %d unités (coût %d)\n",
                meilleur_i, meilleur_j, q, meilleur_cout);
 
         provisions[meilleur_i] -= q;
@@ -165,5 +166,5 @@ void balas_hammer(const Probleme *p, Solution *s)
         }
     }
 
-    printf("\n--- Fin de la méthode de Balas-Hammer ---\n\n");
+    trace("\n--- Fin de la méthode de Balas-Hammer ---\n\n");
 }
