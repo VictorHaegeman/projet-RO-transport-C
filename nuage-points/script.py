@@ -1,62 +1,41 @@
 import pandas as pd
-import matplotlib.pyplot as plt
-import seaborn as sns
 import numpy as np
+import matplotlib.pyplot as plt
 
-# ---------------------------------------------------------
-# Charger le CSV produit par ./complexite
-# ---------------------------------------------------------
-
+# ---- Charger le CSV ----
 df = pd.read_csv("../resultats_complexite.csv", sep=";")
 
-# Garder uniquement les tailles voulues
-df = df[df["n"].isin([10, 40, 100])]
+sizes = [10, 40, 100, 400]
+df = df[df["n"].isin(sizes)].copy()
 
-# ---------------------------------------------------------
-# Choix de la métrique à visualiser
-# (total_no, total_bh, ratio, theta_no, t_no, etc.)
-# ---------------------------------------------------------
+# (optionnel) garder seulement les lignes valides
+df = df[(df["total_no"] >= 0) & (df["total_bh"] >= 0)]
 
-metric = "total_no"   # <<< change ici pour afficher une autre colonne
+np.random.seed(42)
 
-# ---------------------------------------------------------
-# Amélioration de la lisibilité : ajout d'un jitter horizontal
-# ---------------------------------------------------------
+fig, axes = plt.subplots(2, 2, figsize=(14, 8))
+axes = axes.ravel()
 
-np.random.seed(42)   # pour un jitter reproductible
-df["n_jitter"] = df["n"] + np.random.uniform(-1, 1, size=len(df))
+for ax, n in zip(axes, sizes):
+    sub = df[df["n"] == n]
 
-# ---------------------------------------------------------
-# Création du nuage de points
-# ---------------------------------------------------------
+    # 2 colonnes sur l'axe X : 0 = NW, 1 = BH (avec jitter)
+    x_no = 0 + np.random.uniform(-0.08, 0.08, size=len(sub))
+    x_bh = 1 + np.random.uniform(-0.08, 0.08, size=len(sub))
 
-plt.figure(figsize=(12, 6))
+    ax.scatter(x_no, sub["total_no"], s=35, alpha=0.8, label="Nord-Ouest (total_no)")
+    ax.scatter(x_bh, sub["total_bh"], s=35, alpha=0.8, label="Balas-Hammer (total_bh)")
 
-sns.scatterplot(
-    data=df,
-    x="n_jitter",        # X avec jitter pour séparer les points
-    y=metric,
-    hue="n",
-    palette="viridis",
-    s=80,
-    alpha=0.8,
-    edgecolor="black"
-)
+    ax.set_title(f"n = {n} (100 exécutions)")
+    ax.set_xticks([0, 1])
+    ax.set_xticklabels(["Nord-Ouest", "Balas-Hammer"])
+    ax.set_ylabel("Temps (s)")
+    ax.grid(True, linestyle="--", alpha=0.3)
 
-# ---------------------------------------------------------
-# Mise en forme du graphe
-# ---------------------------------------------------------
+# Une seule légende globale (évite de répéter 4 fois)
+handles, labels = axes[0].get_legend_handles_labels()
+fig.legend(handles, labels, loc="upper center", ncol=2)
 
-plt.title(f"Nuage de points – Complexité expérimentale ({metric})", fontsize=16)
-plt.xlabel("Taille du problème n", fontsize=14)
-plt.ylabel(f"Valeur mesurée ({metric})", fontsize=14)
-
-# On force les ticks aux vraies valeurs 10, 40, 100
-plt.xticks([10, 40, 100])
-
-plt.grid(True, linestyle="--", alpha=0.3)
-
-plt.legend(title="n", fontsize=12, title_fontsize=13)
-
-plt.tight_layout()
+fig.suptitle("Nuages de points par taille n (total_no vs total_bh)", y=0.98, fontsize=14)
+plt.tight_layout(rect=[0, 0, 1, 0.94])
 plt.show()
