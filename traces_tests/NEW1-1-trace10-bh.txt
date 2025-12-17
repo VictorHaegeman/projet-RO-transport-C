@@ -175,6 +175,6 @@ La proposition de transport est optimale pour ce problème.
 === SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===
 
 === Meusure du temps ===
-Temps méthode initiale (bh) : 0.002000 secondes
-Temps total marche-pied : 0.001000 secondes
+Temps méthode initiale (bh) : 0.000205 secondes
+Temps total marche-pied : 0.000096 secondes
 =============================================

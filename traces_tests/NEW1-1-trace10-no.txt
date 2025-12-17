@@ -303,6 +303,6 @@ La proposition de transport est optimale pour ce problème.
 === SOLUTION DÉJÀ OPTIMALE, PAS DE MARCHE-PIED ===
 
 === Meusure du temps ===
-Temps méthode initiale (no) : 0.001000 secondes
-Temps total marche-pied : 0.003000 secondes
+Temps méthode initiale (no) : 0.000382 secondes
+Temps total marche-pied : 0.000550 secondes
 =============================================
